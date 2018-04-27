@@ -1,0 +1,86 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion build_versions.target_sdk
+    buildToolsVersion build_versions.build_tools
+    defaultConfig {
+        applicationId "com.example.kotlin.mvp.androidmvparchitexturekotlin"
+        minSdkVersion build_versions.min_sdk
+        targetSdkVersion build_versions.target_sdk
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+
+        release {
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+
+        }
+
+        debug{
+
+            buildConfigField "String", "BASE_URL", "\"https://newsapi.org/v2/top-headlines/\""
+
+        }
+    }
+
+    /**
+     * if you will mix Java and Kotlin files in the same project is a good practice create a kotlin directory
+     * but I prefer created the kotlin package although I will not mix them
+     **/
+    sourceSets {
+        main.java.srcDirs += 'src/main/kotlin'
+    }
+
+    packagingOptions {
+        exclude 'META-INF/rxjava.properties'
+    }
+}
+
+dependencies {
+
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    testImplementation "junit:junit:$versions.junit"
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:$versions.espresso"
+    implementation "com.android.support:design:$versions.support"
+    implementation "com.android.support:recyclerview-v7:$versions.support"
+    implementation "com.android.support:cardview-v7:$versions.support"
+    implementation "com.android.support.constraint:constraint-layout:$versions.constraint_layout"
+
+    // Kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$versions.kotlin_version"
+    compile "org.jetbrains.kotlin:kotlin-reflect:$versions.kotlin_version"
+
+    // Java Rx
+    implementation "io.reactivex.rxjava2:rxjava:$versions.rxjava"
+    implementation "io.reactivex.rxjava2:rxandroid:$versions.rx_android"
+
+    // Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$versions.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava:$versions.retrofit"
+    implementation "com.squareup.retrofit2:converter-gson:$versions.retrofit"
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$versions.retrofit"
+
+    // Room
+    implementation "android.arch.persistence.room:runtime:$versions.archVersion"
+    kapt "android.arch.persistence.room:compiler:$versions.archVersion"
+
+    // ButterKnif
+    implementation "com.jakewharton:butterknife:$versions.butterknif"
+    kapt "com.jakewharton:butterknife-compiler:$versions.butterknif"
+
+    // Dagger
+    implementation "com.google.dagger:dagger:$versions.dagger"
+    kapt "com.google.dagger:dagger-compiler:$versions.dagger"
+
+    // Glide
+    implementation "com.github.bumptech.glide:glide:$versions.glide"
+}
+
