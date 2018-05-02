@@ -1,6 +1,7 @@
 package com.example.kotlin.mvp.androidmvparchitexturekotlin.ui.base
 
-import rx.Subscription
+import io.reactivex.disposables.Disposable
+
 
 /**
  * Created by Ali DOUIRI on 27/04/2018.
@@ -10,7 +11,7 @@ import rx.Subscription
 open class BasePresenter<V : IBaseView> : IBasePresenter<V> {
 
     private var mView: V? = null
-    private val mSubscription: Subscription? = null
+    protected var mDisposable : Disposable? = null
 
     override fun attachView(view: V) {
         mView = view
@@ -18,11 +19,9 @@ open class BasePresenter<V : IBaseView> : IBasePresenter<V> {
 
     override fun detachView() {
 
-        if (mView != null)
-            mView = null
+        if (mView != null) mView = null
 
-        if (mSubscription!!.isUnsubscribed)
-            mSubscription?.unsubscribe()
+        if(mDisposable != null) mDisposable?.dispose()
     }
 
     override fun isViewAttached(): Boolean {

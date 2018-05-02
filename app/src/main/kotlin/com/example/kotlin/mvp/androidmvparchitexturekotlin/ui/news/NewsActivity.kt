@@ -1,6 +1,5 @@
 package com.example.kotlin.mvp.androidmvparchitexturekotlin.ui.news
 
-import android.app.PendingIntent.getActivity
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -34,6 +33,10 @@ class NewsActivity : BaseActivity(), NewsContract.ContractView, NewsAdapter.OnIt
 
         NewsApp.mNewsComponent?.inject(this)
 
+        mPresenter.attachView(this)
+
+        mAdapter = NewsAdapter(this, ArrayList<ArticleEntity>(), this)
+
     }
 
 
@@ -41,8 +44,6 @@ class NewsActivity : BaseActivity(), NewsContract.ContractView, NewsAdapter.OnIt
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.activity_news)
-
-        mPresenter.attachView(this)
 
         setUp()
 
@@ -52,12 +53,10 @@ class NewsActivity : BaseActivity(), NewsContract.ContractView, NewsAdapter.OnIt
 
     override fun setUp() {
 
-        mAdapter = NewsAdapter(this, ArrayList<ArticleEntity>(), this)
-
         val mLayoutManager = LinearLayoutManager(this)
         recyclerview.layoutManager = mLayoutManager
         recyclerview.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
-        recyclerview.setAdapter(mAdapter)
+        recyclerview.adapter = mAdapter
 
     }
 

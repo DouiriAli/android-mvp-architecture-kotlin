@@ -52,30 +52,43 @@ class NewsAdapter(private var context: Context, private var items: List<ArticleE
 
                 mDescription.setText(item?.description)
 
-                Glide
-                        .with(context)
-                        .load(item?.urlToImage)
-                        .listener(object : RequestListener<String, GlideDrawable> {
-                            override fun onException(e: Exception, model: String, target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
-                                if (mProgress != null)
-                                    mProgress.visibility = View.GONE
+                if (item?.urlToImage != null) {
 
-                                return false
-                            }
+                    Glide
+                            .with(context)
+                            .load(item?.urlToImage)
+                            .listener(object : RequestListener<String, GlideDrawable> {
+                                override fun onException(e: Exception, model: String, target: Target<GlideDrawable>, isFirstResource: Boolean): Boolean {
+                                    if (mProgress != null)
+                                        mProgress.visibility = View.GONE
 
-                            override fun onResourceReady(resource: GlideDrawable, model: String, target: Target<GlideDrawable>, isFromMemoryCache: Boolean,
-                                                         isFirstResource: Boolean): Boolean {
+                                    return false
+                                }
 
-                                if (mProgress != null)
-                                    mProgress.visibility = View.GONE
+                                override fun onResourceReady(resource: GlideDrawable, model: String, target: Target<GlideDrawable>, isFromMemoryCache: Boolean,
+                                                             isFirstResource: Boolean): Boolean {
 
-                                return false
-                            }
-                        })
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .crossFade()
-                        .into(mThumbnail)
+                                    if (mProgress != null)
+                                        mProgress.visibility = View.GONE
+
+                                    return false
+                                }
+                            })
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .centerCrop()
+                            .crossFade()
+                            .into(mThumbnail)
+
+                }else{
+
+                    Glide
+                            .with(context)
+                            .load(R.drawable.new_placeholder)
+                            .into(mThumbnail)
+
+                    mProgress.visibility = View.GONE
+
+                }
 
             }
 
@@ -86,8 +99,12 @@ class NewsAdapter(private var context: Context, private var items: List<ArticleE
 
     fun setItems(items: List<ArticleEntity>) {
 
-        this.items = items
-        notifyDataSetChanged()
+        if(items != null && !items?.isEmpty()) {
+
+            this.items = items
+            notifyDataSetChanged()
+
+        }
     }
 
     interface OnItemClickListener {

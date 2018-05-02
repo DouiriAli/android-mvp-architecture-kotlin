@@ -10,6 +10,7 @@ import com.example.kotlin.mvp.androidmvparchitexturekotlin.data.remote.RemoteDat
 import com.example.kotlin.mvp.androidmvparchitexturekotlin.ui.base.BasePresenter
 import com.example.kotlin.mvp.androidmvparchitexturekotlin.utils.NetworkUtil
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import rx.Completable
 import rx.CompletableSubscriber
@@ -24,7 +25,6 @@ class NewsPresenter(val mLocalDataSource: LocalDataSource, val mRemoteDataSource
 
     private final val TAG = NewsPresenter::class.java.simpleName
 
-
     override fun getArticles(context: Context) {
 
         if (NetworkUtil.isNetworkConnected(context))
@@ -37,7 +37,7 @@ class NewsPresenter(val mLocalDataSource: LocalDataSource, val mRemoteDataSource
 
         getView()?.showLoading()
 
-        mRemoteDataSource.getAriclesFromApi()
+        mDisposable = mRemoteDataSource.getAriclesFromApi()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ response ->
